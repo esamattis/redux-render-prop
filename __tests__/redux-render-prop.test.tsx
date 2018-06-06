@@ -202,3 +202,59 @@ test("state can be updated", () => {
 
     expect(button.innerHTML).toBe("secondfoo");
 });
+
+test("unrelated state updates don't cause render", () => {
+    const initialState = {foo: "initialfoo", bar: "initialbar"};
+    const fooAction = {type: "NEW_FOO", foo: "newfoo"};
+    const renderSpy = jest.fn();
+    const fooReducerSpy = jest.fn();
+
+    function reducer(
+        state: typeof initialState,
+        action: typeof fooAction,
+    ): typeof initialState {
+        if (action.type === "NEW_FOO") {
+            fooReducerSpy();
+            return {...state, foo: action.foo};
+        }
+
+        return state;
+    }
+
+    const createComponent = makeCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    const BarConnect = createComponent({
+        mapState: state => ({mappedBar: state.bar}),
+        mapActions: actions => actions,
+    });
+
+    const store = createStore(reducer as any, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <BarConnect
+                    render={(data, actions) => (
+                        <div data-testid="button">
+                            {(renderSpy(), data.mappedBar)}
+                        </div>
+                    )}
+                />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const button = rtl.getByTestId("button");
+
+    expect(button.innerHTML).toBe("initialbar");
+
+    store.dispatch(fooAction);
+
+    expect(fooReducerSpy).toHaveBeenCalledTimes(1);
+    expect(renderSpy).toHaveBeenCalledTimes(1);
+});
