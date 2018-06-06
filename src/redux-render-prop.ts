@@ -18,29 +18,36 @@ export function makeCreator<State, Actions>(makeOptions: {
         const RenderPropComponent = anyConnect(
             (state: any, ownProps: OwnProps) => {
                 if (options.mapState) {
-                    return options.mapState(
-                        makeOptions.prepareState(state),
-                        ownProps,
-                    );
+                    return {
+                        mappedState: options.mapState(
+                            makeOptions.prepareState(state),
+                            ownProps,
+                        ),
+                    };
                 }
                 return {};
             },
             (dispatch: any, props: OwnProps) => {
                 if (options.mapActions) {
-                    return options.mapActions(
-                        makeOptions.prepareActions(dispatch),
-                        props,
-                    );
+                    return {
+                        mappedActions: options.mapActions(
+                            makeOptions.prepareActions(dispatch),
+                            props,
+                        ),
+                    };
                 } else {
                     return {};
                 }
             },
-        )((mappedProps: any) => mappedProps.render(mappedProps));
+        )((props: any) => props.render(props.mappedState, props.mappedActions));
 
         // But return the component with proper types
         return RenderPropComponent as React.StatelessComponent<
             OwnProps & {
-                render: (props: MappedState & MappedActions) => React.ReactNode;
+                render: (
+                    data: MappedState,
+                    actions: MappedActions,
+                ) => React.ReactNode;
             }
         >;
     };
