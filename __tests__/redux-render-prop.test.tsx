@@ -258,3 +258,40 @@ test("unrelated state updates don't cause render", () => {
     expect(fooReducerSpy).toHaveBeenCalledTimes(1);
     expect(renderSpy).toHaveBeenCalledTimes(1);
 });
+
+test("can use ownprops in map state", () => {
+    const initialState = {foo: "initialfoo"};
+
+    const createComponent = makeCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    const FooConnect = createComponent({
+        mapState: (state, props: {extra: string}) => ({
+            mappedFoo: state.foo + props.extra,
+        }),
+        mapActions: actions => actions,
+    });
+
+    const store = createStore(s => s, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect
+                    extra="EXTRA"
+                    render={(data, actions) => (
+                        <div data-testid="foo">{data.mappedFoo}</div>
+                    )}
+                />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const foo = rtl.getByTestId("foo");
+
+    expect(foo.innerHTML).toBe("initialfooEXTRA");
+});
