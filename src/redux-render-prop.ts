@@ -1,8 +1,5 @@
-import {connect} from "react-redux";
+import {connectAdvanced} from "react-redux";
 import shallowEqual from "./shallow-equal";
-
-// Yep. We do a lot with any here.
-const anyConnect = connect as any;
 
 interface InternalProps {
     mappedState: any;
@@ -12,10 +9,6 @@ interface InternalProps {
 
 const renderSelf = (props: InternalProps) =>
     props.render(props.mappedState, props.mappedActions);
-
-function areStatePropsEqual(propsA: InternalProps, propsB: InternalProps) {
-    return shallowEqual(propsA.mappedState, propsB.mappedState);
-}
 
 export function makeCreator<State, Actions>(makeOptions: {
     prepareState: (state: any) => State;
@@ -29,36 +22,73 @@ export function makeCreator<State, Actions>(makeOptions: {
         mapState?: (state: State, ownProps: OwnProps) => MappedState;
         mapActions?: (actions: Actions, ownProps: OwnProps) => MappedActions;
     }) {
-        const RenderPropComponent = anyConnect(
-            (state: any, ownProps: OwnProps): Partial<InternalProps> => {
-                if (options.mapState) {
-                    return {
-                        mappedState: options.mapState(
+        const RenderPropComponent = connectAdvanced(
+            (dispatch, factoryOptions) => {
+                let mappedStateCache: Object = {};
+                let mappedActionsCache: Object = {};
+                let ownPropsCache: Object = {};
+
+                let prevState: Object = {};
+                let prevRender: any = null;
+
+                let finalPropsCache: any = {};
+
+                return (state, {render, ...ownProps}: any) => {
+                    const stateChanged = state !== prevState;
+                    prevState = state;
+
+                    const ownPropsChanged = !shallowEqual(
+                        ownPropsCache,
+                        ownProps,
+                    );
+                    ownPropsCache = ownProps;
+
+                    const renderChanged = prevRender !== render;
+                    prevRender = render;
+
+                    const someArgumentChanged = stateChanged || ownPropsChanged;
+
+                    let resultChanged = false;
+
+                    if (options.mapState && someArgumentChanged) {
+                        const newMappedState = options.mapState(
                             makeOptions.prepareState(state),
                             ownProps,
-                        ),
-                    };
-                }
-                return {};
-            },
-            (dispatch: any, props: OwnProps): Partial<InternalProps> => {
-                if (options.mapActions) {
-                    return {
-                        mappedActions: options.mapActions(
+                        );
+                        if (!shallowEqual(newMappedState, mappedStateCache)) {
+                            mappedStateCache = newMappedState;
+                            resultChanged = true;
+                        }
+                    }
+
+                    if (options.mapActions && someArgumentChanged) {
+                        const newMappedActions = options.mapActions(
                             makeOptions.prepareActions(dispatch),
-                            props,
-                        ),
-                    };
-                } else {
-                    return {};
-                }
+                            ownProps,
+                        );
+                        if (
+                            !shallowEqual(newMappedActions, mappedActionsCache)
+                        ) {
+                            mappedActionsCache = newMappedActions;
+                            resultChanged = true;
+                        }
+                    }
+
+                    if (resultChanged || renderChanged) {
+                        finalPropsCache = {
+                            mappedState: mappedStateCache,
+                            mappedActions: mappedActionsCache,
+                            render: render,
+                        };
+                    }
+
+                    return finalPropsCache;
+                };
             },
-            null,
-            {areStatePropsEqual},
-        )(renderSelf);
+        )(renderSelf as any);
 
         // But return the component with proper types
-        return RenderPropComponent as React.StatelessComponent<
+        return (RenderPropComponent as any) as React.StatelessComponent<
             OwnProps & {
                 render: (
                     data: MappedState,
