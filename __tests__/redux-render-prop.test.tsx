@@ -295,3 +295,70 @@ test("can use ownprops in map state", () => {
 
     expect(foo.innerHTML).toBe("initialfooEXTRA");
 });
+
+test("can use ownprops in map actions", () => {
+    const initialState = {foo: "initialfoo"};
+    const fooAction = {type: "NEW_FOO", foo: "newfoo"};
+
+    function reducer(
+        state: typeof initialState,
+        action: typeof fooAction,
+    ): typeof initialState {
+        if (action.type === "NEW_FOO") {
+            return {...state, foo: action.foo};
+        }
+
+        return state;
+    }
+
+    const createComponent = makeCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({
+            dispatch,
+        }),
+    });
+
+    const FooConnect = createComponent({
+        mapState: (state, ownProps: {propArg: string}) => ({
+            mappedFoo: state.foo,
+        }),
+        mapActions: (actions, ownProps) => ({
+            newFoo(actionArg: string) {
+                actions.dispatch({
+                    type: "NEW_FOO",
+                    foo: `BASE|${actionArg}|${ownProps.propArg}`,
+                });
+            },
+        }),
+    });
+
+    const store = createStore(reducer as any, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect
+                    propArg="PROP_ARG"
+                    render={(data, actions) => (
+                        <button
+                            data-testid="button"
+                            onClick={() => {
+                                actions.newFoo("ACTION_ARG");
+                            }}
+                        >
+                            {data.mappedFoo}
+                        </button>
+                    )}
+                />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const button = rtl.getByTestId("button");
+
+    Simulate.click(button);
+
+    expect(button.innerHTML).toBe("BASE|ACTION_ARG|PROP_ARG");
+});
