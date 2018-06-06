@@ -492,7 +492,7 @@ test("state change won't cause action mapping", () => {
         </Provider>
     );
 
-    const rtl = render(<App />);
+    render(<App />);
 
     store.dispatch({type: "NEW_FOO", foo: "ding"});
 
