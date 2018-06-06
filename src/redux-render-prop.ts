@@ -1,3 +1,4 @@
+import React from "react";
 import {connectAdvanced} from "react-redux";
 import shallowEqual from "./shallow-equal";
 
