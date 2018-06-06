@@ -142,3 +142,59 @@ test("parent container can cause render prop to render", () => {
     expect(outer.innerHTML).toBe("2");
     expect(inner.innerHTML).toBe("2");
 });
+
+test("state can be updated", () => {
+    const initialState = {foo: "initialfoo", bar: "initialbar"};
+    const fooAction = {type: "NEW_FOO", foo: "newfoo"};
+
+    function reducer(
+        state: typeof initialState,
+        action: typeof fooAction,
+    ): typeof initialState {
+        if (action.type === "NEW_FOO") {
+            return {...state, foo: action.foo};
+        }
+
+        return state;
+    }
+
+    const createComponent = makeCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({
+            newFoo() {
+                dispatch(fooAction);
+            },
+        }),
+    });
+
+    const FooConnect = createComponent({
+        mapState: state => ({mappedFoo: state.foo}),
+        mapActions: actions => actions,
+    });
+
+    const store = createStore(reducer as any, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect
+                    render={(data, actions) => (
+                        <button data-testid="button" onClick={actions.newFoo}>
+                            {data.mappedFoo}
+                        </button>
+                    )}
+                />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const button = rtl.getByTestId("button");
+
+    expect(button.innerHTML).toBe("initialfoo");
+
+    Simulate.click(button);
+
+    expect(button.innerHTML).toBe("newfoo");
+});
