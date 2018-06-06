@@ -197,4 +197,8 @@ test("state can be updated", () => {
     Simulate.click(button);
 
     expect(button.innerHTML).toBe("newfoo");
+
+    store.dispatch({type: "NEW_FOO", foo: "secondfoo"});
+
+    expect(button.innerHTML).toBe("secondfoo");
 });
