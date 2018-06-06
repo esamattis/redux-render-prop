@@ -441,3 +441,60 @@ test("ownprops won't cause useless state or action mapping", () => {
     expect(mapActionsSpy).toHaveBeenCalledTimes(1);
     expect(mapStateSpy).toHaveBeenCalledTimes(1);
 });
+
+test("state change won't cause action mapping", () => {
+    const mapActionsSpy = jest.fn();
+
+    const initialState = {foo: "initialfoo", bar: "initialbar"};
+    const fooAction = {type: "NEW_FOO", foo: "newfoo"};
+
+    function reducer(
+        state: typeof initialState,
+        action: typeof fooAction,
+    ): typeof initialState {
+        if (action.type === "NEW_FOO") {
+            return {...state, foo: action.foo};
+        }
+
+        return state;
+    }
+
+    const createComponent = makeCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({
+            newFoo() {
+                dispatch(fooAction);
+            },
+        }),
+    });
+
+    const FooConnect = createComponent({
+        mapState: state => ({mappedFoo: state.foo}),
+        mapActions: actions => {
+            mapActionsSpy();
+            return actions;
+        },
+    });
+
+    const store = createStore(reducer as any, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect
+                    render={(data, actions) => (
+                        <button data-testid="button" onClick={actions.newFoo}>
+                            {data.mappedFoo}
+                        </button>
+                    )}
+                />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    store.dispatch({type: "NEW_FOO", foo: "ding"});
+
+    expect(mapActionsSpy).toHaveBeenCalledTimes(1);
+});

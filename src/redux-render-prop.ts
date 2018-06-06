@@ -24,9 +24,9 @@ export function makeCreator<State, Actions>(makeOptions: {
     }) {
         const RenderPropComponent = connectAdvanced(
             (dispatch, factoryOptions) => {
-                let mappedStateCache: Object = {};
-                let mappedActionsCache: Object = {};
-                let ownPropsCache: Object = {};
+                let mappedStateCache: any = null;
+                let mappedActionsCache: any = null;
+                let ownPropsCache: any = null;
 
                 let prevState: Object = {};
                 let prevRender: any = null;
@@ -61,7 +61,7 @@ export function makeCreator<State, Actions>(makeOptions: {
                         }
                     }
 
-                    if (options.mapActions && someArgumentChanged) {
+                    if (options.mapActions && ownPropsChanged) {
                         const newMappedActions = options.mapActions(
                             makeOptions.prepareActions(dispatch),
                             ownProps,
