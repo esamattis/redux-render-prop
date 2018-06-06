@@ -362,3 +362,82 @@ test("can use ownprops in map actions", () => {
 
     expect(button.innerHTML).toBe("BASE|ACTION_ARG|PROP_ARG");
 });
+
+test("ownprops won't cause useless state or action mapping", () => {
+    const mapStateSpy = jest.fn();
+    const mapActionsSpy = jest.fn();
+
+    const initialState = {foo: "initialfoo"};
+
+    const createComponent = makeCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({
+            dispatch,
+        }),
+    });
+
+    const FooConnect = createComponent({
+        mapState: (state, ownProps: {propArg: string}) => {
+            mapStateSpy();
+            return {
+                mappedFoo: state.foo + ownProps.propArg,
+            };
+        },
+        mapActions: (actions, ownProps) => {
+            mapActionsSpy();
+            return {
+                newFoo(actionArg: string) {},
+            };
+        },
+    });
+
+    const store = createStore(s => s, initialState);
+
+    class ParentContainer extends React.Component {
+        state = {count: 1};
+
+        increment = () => {
+            this.setState({count: this.state.count + 1});
+        };
+
+        render() {
+            return (
+                <div>
+                    <button data-testid="button" onClick={this.increment}>
+                        inc
+                    </button>
+                    <div data-testid="parent-count-outer">
+                        {this.state.count}
+                    </div>
+                    <FooConnect
+                        propArg="ding"
+                        render={data => (
+                            <div>
+                                <div data-testid="foo">{data.mappedFoo}</div>
+                                <div data-testid="parent-count-inner">
+                                    {this.state.count}
+                                </div>
+                            </div>
+                        )}
+                    />
+                </div>
+            );
+        }
+    }
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <ParentContainer />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const button = rtl.getByTestId("button");
+    Simulate.click(button);
+
+    expect(mapActionsSpy).toHaveBeenCalledTimes(1);
+    expect(mapStateSpy).toHaveBeenCalledTimes(1);
+});
