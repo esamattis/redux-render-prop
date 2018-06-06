@@ -100,20 +100,20 @@ test("parent container can cause render prop to render", () => {
         };
 
         render() {
+            const {count} = this.state;
+
             return (
                 <div>
                     <button data-testid="button" onClick={this.increment}>
                         inc
                     </button>
-                    <div data-testid="parent-count-outer">
-                        {this.state.count}
-                    </div>
+                    <div data-testid="parent-count-outer">{count}</div>
                     <FooConnect
                         render={data => (
                             <div>
                                 <div data-testid="foo">{data.mappedFoo}</div>
                                 <div data-testid="parent-count-inner">
-                                    {this.state.count}
+                                    {count}
                                 </div>
                             </div>
                         )}
