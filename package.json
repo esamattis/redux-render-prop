@@ -1,6 +1,6 @@
 {
   "name": "redux-render-prop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Redux with render prop components. Typescript friendly.",
   "main": "build/src/redux-render-prop.js",
   "scripts": {
