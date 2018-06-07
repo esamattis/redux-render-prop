@@ -44,6 +44,7 @@ const CounterConnect = createAppComponent({
     }),
 });
 
+// Must be wrapped with <Provider store={store} />
 const App = () => (
     <div>
         <CounterConnect
