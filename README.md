@@ -27,7 +27,7 @@ interface State {
     };
 }
 
-// Define some actions creators. Works well with Redutser.
+// Define some actions creators. Works well with redutser.
 const ActionCreators = {
     incrementByName: (name: string) => {
         return {type: "INC", name};
@@ -36,7 +36,9 @@ const ActionCreators = {
 
 // Create render prop component creator with app specific types
 const createAppComponent = makeCreator({
-    // creators infer the state type from here
+    // creators infer the state type from here.
+    // You can also return here something else than the state
+    // itself. For example you could wrap it with selector helpers.
     prepareState: (state: State) => state,
 
     // Same goes for the actions
