@@ -2,7 +2,7 @@
     "name": "redux-render-prop",
     "version": "1.0.0",
     "description": "",
-    "main": "lib/redux-render-prop.js",
+    "main": "build/src/redux-render-prop.js",
     "scripts": {
         "test": "jest",
         "build": "tsc"
