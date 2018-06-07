@@ -49,13 +49,14 @@ const createAppComponent = makeCreator({
 });
 
 // Create render prop component for counters.
-// Own props type is used to infer types for the component props
 const CounterConnect = createAppComponent({
+    // state type is infered from the prepareState return value
     mapState: (state, ownProps: {name: string}) => ({
         count: state.counters[ownProps.name].count,
     }),
+    // actions type is infered from the prepareActions and
+    // ownProps type is from the mapState ownProps
     mapActions: (actions, ownProps) => ({
-        // ownProps type is infered from the mapState ownProps
         inc() {
             actions.incrementByName(ownProps.name);
         },
