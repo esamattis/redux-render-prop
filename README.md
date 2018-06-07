@@ -5,7 +5,7 @@ Redux with [render prop components][1]. Typescript friendly.
 Install
 
 ```sh
-npm install redux-render-prop react-redux # has peer dep of react-redux
+npm install redux-render-prop react-redux@5 # has peer dep of react-redux 5.x
 ```
 
 For Typescript you will need the types too
