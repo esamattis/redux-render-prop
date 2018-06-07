@@ -37,24 +37,33 @@ const ActionCreators = {
     },
 };
 
-// Create render prop component creator with app specific types
+// Create render prop component creator with app specific types.
+// There is usually only one of these per app
 const createAppComponent = makeCreator({
-    // creators infer the state type from here.
-    // You can also return here something else than the state
+
+    // Component creators infer the state type from here.
+    //
+    // It is possible to return only part of the state here
+    // which can be handy if you have a large app and want multiple
+    // more specific component creators.
+    //
+    // You can also return here something other than the state
     // itself. For example you could wrap it with selector helpers.
     prepareState: (state: State) => state,
 
-    // Same goes for the actions
+    // Actions are prepared similarly.
     prepareActions: dispatch => bindActionCreators(ActionCreators, dispatch),
 });
 
 // Create render prop component for counters.
 const CounterConnect = createAppComponent({
-    // state type is infered from the prepareState return value
+
+    // State type is infered from the prepareState return value
     mapState: (state, ownProps: {name: string}) => ({
         count: state.counters[ownProps.name].count,
     }),
-    // actions type is infered from the prepareActions and
+    
+    // Actions type is infered from the prepareActions and
     // ownProps type is from the mapState ownProps
     mapActions: (actions, ownProps) => ({
         inc() {
