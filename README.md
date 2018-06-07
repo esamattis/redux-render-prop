@@ -1,6 +1,9 @@
 # redux-render-prop
 
-Redux with [render prop components][1]. Typescript friendly.
+Redux with [render props][1]. Alternative to the `connect()` higher order component.
+
+Very TypeScript friendly. It heavily leverages type inference to
+avoid manual typing of props.
 
 Install
 
