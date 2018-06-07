@@ -55,6 +55,7 @@ const CounterConnect = createAppComponent({
         count: state.counters[ownProps.name].count,
     }),
     mapActions: (actions, ownProps) => ({
+        // ownProps type is infered from the mapState ownProps
         inc() {
             actions.incrementByName(ownProps.name);
         },
