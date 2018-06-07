@@ -3,6 +3,9 @@
     "version": "0.1.1",
     "description": "Redux with render props. Typescript friendly.",
     "main": "build/src/redux-render-prop.js",
+    "repository": {
+        "url": "https://github.com/epeli/redux-render-prop"
+    },
     "scripts": {
         "test": "jest",
         "build": "tsc"
