@@ -4,7 +4,8 @@
     "description": "",
     "main": "lib/redux-render-prop.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest",
+        "build": "tsc"
     },
     "author": "",
     "license": "ISC",
