@@ -2,6 +2,18 @@
 
 Redux with [render prop components][1]. Typescript friendly.
 
+Install
+
+```sh
+npm install redux-render-prop react-redux # has peer dep of react-redux
+```
+
+For Typescript you will need the types too
+
+```sh
+npm install @types/react-dom @types/react @types/react-redux
+```
+
 Usage
 
 ```ts
