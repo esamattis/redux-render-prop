@@ -1,6 +1,7 @@
 import React from "react";
 import {connectAdvanced} from "react-redux";
 import shallowEqual from "./shallow-equal";
+import {Dispatch, AnyAction} from "redux";
 
 interface InternalProps {
     mappedState: any;
@@ -13,7 +14,7 @@ const renderSelf = (props: InternalProps) =>
 
 export function makeCreator<State, Actions>(makeOptions: {
     prepareState: (state: any) => State;
-    prepareActions: (dispatch: Function) => Actions;
+    prepareActions: (dispatch: Dispatch<AnyAction>) => Actions;
 }) {
     return function createComponent<
         MappedState,
