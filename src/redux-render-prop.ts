@@ -1,7 +1,7 @@
-import React from "react";
 import {connectAdvanced} from "react-redux";
 import shallowEqual from "./shallow-equal";
 import {Dispatch, AnyAction} from "redux";
+import {StatelessComponent, ReactNode} from "react";
 
 interface InternalProps {
     mappedState: any;
@@ -90,12 +90,12 @@ export function makeCreator<State, Actions>(makeOptions: {
         )(renderSelf as any);
 
         // But return the component with proper types
-        return (RenderPropComponent as any) as React.StatelessComponent<
+        return (RenderPropComponent as any) as StatelessComponent<
             OwnProps & {
                 render: (
                     data: MappedState,
                     actions: MappedActions,
-                ) => React.ReactNode;
+                ) => ReactNode;
             }
         >;
     };
