@@ -29,6 +29,7 @@ export function makeCreator<State, Actions>(makeOptions: {
                 let mappedStateCache: any = null;
                 let mappedActionsCache: any = null;
                 let ownPropsCache: any = null;
+                let preparedActions: any = null;
 
                 let prevState: Object = {};
                 let prevRender: any = null;
@@ -64,8 +65,14 @@ export function makeCreator<State, Actions>(makeOptions: {
                     }
 
                     if (options.mapActions && ownPropsChanged) {
+                        if (!preparedActions) {
+                            preparedActions = makeOptions.prepareActions(
+                                dispatch,
+                            );
+                        }
+
                         const newMappedActions = options.mapActions(
-                            makeOptions.prepareActions(dispatch),
+                            preparedActions,
                             ownProps,
                         );
                         if (

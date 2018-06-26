@@ -498,3 +498,87 @@ test("state change won't cause action mapping", () => {
 
     expect(mapActionsSpy).toHaveBeenCalledTimes(1);
 });
+
+test("prepare actions is called only once per mount", () => {
+    const mapStateSpy = jest.fn();
+    const mapActionsSpy = jest.fn();
+    const prepareActionsSpy = jest.fn();
+
+    const initialState = {foo: "initialfoo"};
+
+    const createComponent = makeCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => {
+            prepareActionsSpy();
+            return {
+                dispatch,
+            };
+        },
+    });
+
+    const FooConnect = createComponent({
+        mapState: (state, ownProps: {propArg: string}) => {
+            mapStateSpy();
+            return {
+                mappedFoo: state.foo + ownProps.propArg,
+            };
+        },
+        mapActions: (actions, ownProps) => {
+            mapActionsSpy();
+            return {
+                newFoo(actionArg: string) {},
+            };
+        },
+    });
+
+    const store = createStore(s => s, initialState);
+
+    class ParentContainer extends React.Component {
+        state = {count: 1};
+
+        increment = () => {
+            this.setState({count: this.state.count + 1});
+        };
+
+        render() {
+            return (
+                <div>
+                    <button data-testid="button" onClick={this.increment}>
+                        inc
+                    </button>
+                    <div data-testid="parent-count-outer">
+                        {this.state.count}
+                    </div>
+                    <FooConnect
+                        propArg={String(this.state.count)}
+                        render={data => (
+                            <div>
+                                <div data-testid="foo">{data.mappedFoo}</div>
+                                <div data-testid="parent-count-inner">
+                                    {this.state.count}
+                                </div>
+                            </div>
+                        )}
+                    />
+                </div>
+            );
+        }
+    }
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <ParentContainer />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const button = rtl.getByTestId("button");
+    Simulate.click(button);
+
+    expect(mapActionsSpy).toHaveBeenCalledTimes(2);
+    expect(mapStateSpy).toHaveBeenCalledTimes(2);
+    expect(prepareActionsSpy).toHaveBeenCalledTimes(1);
+});
