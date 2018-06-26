@@ -12,7 +12,7 @@ interface InternalProps {
 const renderSelf = (props: InternalProps) =>
     props.render(props.mappedState, props.mappedActions);
 
-export function makeCreator<State, Actions>(makeOptions: {
+export function makeComponentCreator<State, Actions>(makeOptions: {
     prepareState: (state: any) => State;
     prepareActions: (dispatch: Dispatch<AnyAction>) => Actions;
 }) {

@@ -1,6 +1,6 @@
 import React from "react";
 import {render, fireEvent, cleanup} from "react-testing-library";
-import {makeCreator} from "../src/redux-render-prop";
+import {makeComponentCreator} from "../src/redux-render-prop";
 import {createStore} from "redux";
 import {Provider} from "react-redux";
 
@@ -9,7 +9,7 @@ afterEach(cleanup);
 test("can render data to react", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -43,7 +43,7 @@ test("can use actions", () => {
 
     const spyAction = jest.fn();
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({spyAction}),
     });
@@ -83,7 +83,7 @@ test("can use actions", () => {
 test("parent container can cause render prop to render", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -160,7 +160,7 @@ test("state can be updated", () => {
         return state;
     }
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             newFoo() {
@@ -223,7 +223,7 @@ test("unrelated state updates don't cause render", () => {
         return state;
     }
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -264,7 +264,7 @@ test("unrelated state updates don't cause render", () => {
 test("can use ownprops in map state", () => {
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -313,7 +313,7 @@ test("can use ownprops in map actions", () => {
         return state;
     }
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             dispatch,
@@ -371,7 +371,7 @@ test("ownprops won't cause useless state or action mapping", () => {
 
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             dispatch,
@@ -461,7 +461,7 @@ test("state change won't cause action mapping", () => {
         return state;
     }
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             newFoo() {
@@ -508,7 +508,7 @@ test("prepare actions is called only once per mount", () => {
 
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeCreator({
+    const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => {
             prepareActionsSpy();

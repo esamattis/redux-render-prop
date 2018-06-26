@@ -21,7 +21,7 @@ Usage
 
 ```ts
 import {bindActionCreators} from "redux";
-import {makeCreator} from "redux-render-prop";
+import {makeComponentCreator} from "redux-render-prop";
 
 // Define state as a single type
 interface State {
@@ -39,8 +39,7 @@ const ActionCreators = {
 
 // Create render prop component creator with app specific types.
 // There is usually only one of these per app
-const createAppComponent = makeCreator({
-
+const createAppComponent = makeComponentCreator({
     // Component creators infer the state type from here.
     //
     // It is possible to return only part of the state here
@@ -57,12 +56,11 @@ const createAppComponent = makeCreator({
 
 // Create render prop component for counters.
 const CounterConnect = createAppComponent({
-
     // State type is infered from the prepareState return value
     mapState: (state, ownProps: {name: string}) => ({
         count: state.counters[ownProps.name].count,
     }),
-    
+
     // Actions type is infered from the prepareActions and
     // ownProps type is from the mapState ownProps
     mapActions: (actions, ownProps) => ({
