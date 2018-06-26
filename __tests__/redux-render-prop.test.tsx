@@ -1,8 +1,10 @@
 import React from "react";
-import {render, Simulate} from "react-testing-library";
+import {render, fireEvent, cleanup} from "react-testing-library";
 import {makeCreator} from "../src/redux-render-prop";
 import {createStore} from "redux";
 import {Provider} from "react-redux";
+
+afterEach(cleanup);
 
 test("can render data to react", () => {
     const initialState = {foo: "bar"};
@@ -73,7 +75,7 @@ test("can use actions", () => {
 
     const button = rtl.getByTestId("button");
 
-    Simulate.click(button);
+    fireEvent.click(button);
 
     expect(spyAction).toHaveBeenCalledTimes(1);
 });
@@ -137,7 +139,7 @@ test("parent container can cause render prop to render", () => {
     const inner = rtl.getByTestId("parent-count-inner");
 
     const button = rtl.getByTestId("button");
-    Simulate.click(button);
+    fireEvent.click(button);
 
     expect(outer.innerHTML).toBe("2");
     expect(inner.innerHTML).toBe("2");
@@ -194,7 +196,7 @@ test("state can be updated", () => {
 
     expect(button.innerHTML).toBe("initialfoo");
 
-    Simulate.click(button);
+    fireEvent.click(button);
 
     expect(button.innerHTML).toBe("newfoo");
 
@@ -358,7 +360,7 @@ test("can use ownprops in map actions", () => {
 
     const button = rtl.getByTestId("button");
 
-    Simulate.click(button);
+    fireEvent.click(button);
 
     expect(button.innerHTML).toBe("BASE|ACTION_ARG|PROP_ARG");
 });
@@ -436,7 +438,7 @@ test("ownprops won't cause useless state or action mapping", () => {
     const rtl = render(<App />);
 
     const button = rtl.getByTestId("button");
-    Simulate.click(button);
+    fireEvent.click(button);
 
     expect(mapActionsSpy).toHaveBeenCalledTimes(1);
     expect(mapStateSpy).toHaveBeenCalledTimes(1);
@@ -576,7 +578,7 @@ test("prepare actions is called only once per mount", () => {
     const rtl = render(<App />);
 
     const button = rtl.getByTestId("button");
-    Simulate.click(button);
+    fireEvent.click(button);
 
     expect(mapActionsSpy).toHaveBeenCalledTimes(2);
     expect(mapStateSpy).toHaveBeenCalledTimes(2);
