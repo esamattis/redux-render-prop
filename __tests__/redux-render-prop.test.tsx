@@ -368,14 +368,19 @@ test("can use ownprops in map actions", () => {
 test("ownprops won't cause useless state or action mapping", () => {
     const mapStateSpy = jest.fn();
     const mapActionsSpy = jest.fn();
+    const prepareActionsSpy = jest.fn();
+    const renderSpy = jest.fn();
 
     const initialState = {foo: "initialfoo"};
 
     const createComponent = makeComponentCreator({
         prepareState: state => state as typeof initialState,
-        prepareActions: dispatch => ({
-            dispatch,
-        }),
+        prepareActions: dispatch => {
+            prepareActionsSpy();
+            return {
+                dispatch,
+            };
+        },
     });
 
     const FooConnect = createComponent({
@@ -403,6 +408,7 @@ test("ownprops won't cause useless state or action mapping", () => {
         };
 
         render() {
+            renderSpy();
             return (
                 <div>
                     <button data-testid="button" onClick={this.increment}>
@@ -440,8 +446,13 @@ test("ownprops won't cause useless state or action mapping", () => {
     const button = rtl.getByTestId("button");
     fireEvent.click(button);
 
+    // has been rendered twice
+    expect(renderSpy).toHaveBeenCalledTimes(2);
+
+    // but mapped and prepared only once
     expect(mapActionsSpy).toHaveBeenCalledTimes(1);
     expect(mapStateSpy).toHaveBeenCalledTimes(1);
+    expect(prepareActionsSpy).toHaveBeenCalledTimes(1);
 });
 
 test("state change won't cause action mapping", () => {
