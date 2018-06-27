@@ -30,7 +30,7 @@ interface State {
     };
 }
 
-// Define some actions creators. Works well with redutser.
+// Define some actions creators
 const ActionCreators = {
     incrementByName: (name: string) => {
         return {type: "INC", name};
