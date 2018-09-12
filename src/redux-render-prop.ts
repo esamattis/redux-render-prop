@@ -9,8 +9,26 @@ interface InternalProps {
     render: Function;
 }
 
-const renderSelf = (props: InternalProps) =>
-    props.render(props.mappedState, props.mappedActions);
+export class RenderNull extends Error {
+    isRenderNull: boolean;
+
+    constructor() {
+        super("Render null");
+        this.isRenderNull = true;
+    }
+}
+
+function isRenderNull(o: any): o is RenderNull {
+    return o && o.isRenderNull;
+}
+
+const reduxRenderPropRender = (props: InternalProps) => {
+    if (props.mappedState.__renderNull) {
+        return null;
+    }
+
+    return props.render(props.mappedState, props.mappedActions);
+};
 
 export function makeComponentCreator<State, Actions>(makeOptions: {
     prepareState: (state: any) => State;
@@ -54,10 +72,21 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                     let resultChanged = false;
 
                     if (options.mapState && someArgumentChanged) {
-                        const newMappedState = options.mapState(
-                            makeOptions.prepareState(state),
-                            ownProps,
-                        );
+                        let newMappedState = {};
+
+                        try {
+                            newMappedState = options.mapState(
+                                makeOptions.prepareState(state),
+                                ownProps,
+                            );
+                        } catch (error) {
+                            if (isRenderNull(error)) {
+                                newMappedState = {__renderNull: true};
+                            } else {
+                                throw error;
+                            }
+                        }
+
                         if (!shallowEqual(newMappedState, mappedStateCache)) {
                             mappedStateCache = newMappedState;
                             resultChanged = true;
@@ -94,7 +123,7 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                     return finalPropsCache;
                 };
             },
-        )(renderSelf as any);
+        )(reduxRenderPropRender as any);
 
         // But return the component with proper types
         return (RenderPropComponent as any) as StatelessComponent<

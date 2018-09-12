@@ -1,6 +1,6 @@
 import React from "react";
 import {render, fireEvent, cleanup} from "react-testing-library";
-import {makeComponentCreator} from "../src/redux-render-prop";
+import {makeComponentCreator, RenderNull} from "../src/redux-render-prop";
 import {createStore} from "redux";
 import {Provider} from "react-redux";
 
@@ -594,4 +594,40 @@ test("prepare actions is called only once per mount", () => {
     expect(mapActionsSpy).toHaveBeenCalledTimes(2);
     expect(mapStateSpy).toHaveBeenCalledTimes(2);
     expect(prepareActionsSpy).toHaveBeenCalledTimes(1);
+});
+
+test("renders null when RenderNull is thrown from mapState", () => {
+    const initialState = {foo: "bar"};
+
+    const createComponent = makeComponentCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    const FooConnect = createComponent({
+        mapState: state => {
+            if (state.foo === "bar") {
+                throw new RenderNull();
+            }
+
+            return {mappedFoo: state.foo};
+        },
+    });
+    const store = createStore(s => s, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div data-testid="container">
+                start
+                <FooConnect render={data => <span>{data.mappedFoo}</span>} />
+                end
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const el = rtl.getByTestId("container");
+
+    expect(el.innerHTML).toBe("startend");
 });
