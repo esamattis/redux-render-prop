@@ -619,7 +619,14 @@ test("renders null when RenderNull is thrown from mapState", () => {
         <Provider store={store}>
             <div data-testid="container">
                 start
-                <FooConnect render={data => <span>{data.mappedFoo}</span>} />
+                <FooConnect
+                    render={data => (
+                        <span>
+                            in render
+                            {data.mappedFoo}
+                        </span>
+                    )}
+                />
                 end
             </div>
         </Provider>
