@@ -9,6 +9,11 @@ interface InternalProps {
     render: Function;
 }
 
+/**
+ * Throw in mapState to force null rendering.
+ * 
+ * Experimental API. Do not use.
+ */
 export class RenderNull extends Error {
     isRenderNull: boolean;
 
