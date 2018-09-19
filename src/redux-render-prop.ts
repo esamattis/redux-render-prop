@@ -93,7 +93,6 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                     const preparedState = makeOptions.prepareState(state);
 
                     if (!memoizedMapState && options.memoizeMapState) {
-                        console.log("memoizedMapState", memoizedMapState);
                         memoizedMapState = options.memoizeMapState(
                             preparedState,
                             ownPropsCache,
