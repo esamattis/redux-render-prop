@@ -8,5 +8,5 @@ module.exports = {
             tsConfigFile: "tsconfig.json",
         },
     },
-    testMatch: ["**/__tests__/*.+(ts|tsx|js)"],
+    testMatch: ["**/?(*.)+(spec|test).ts?(x)"],
 };

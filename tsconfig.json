@@ -1,20 +1,14 @@
 {
+    "exclude": ["__dtslint__"],
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
-        "lib": ["es6", "dom"],
-        "sourceMap": true,
-        "outDir": "./build",
-        "declaration": true,
-        "declarationDir": "./typings",
         "jsx": "react",
+        "target": "es5",
+        "noEmit": true,
+        "lib": ["es6", "dom"],
         "moduleResolution": "node",
         "forceConsistentCasingInFileNames": true,
         "strict": true,
-        "esModuleInterop": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noImplicitAny": true,
-        "noUnusedLocals": true
+        "esModuleInterop": true
     }
 }

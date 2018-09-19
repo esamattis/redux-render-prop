@@ -2,13 +2,16 @@
     "name": "redux-render-prop",
     "version": "0.2.1",
     "description": "Redux with render props. Typescript friendly.",
-    "main": "build/src/redux-render-prop.js",
+    "main": "lib/redux-render-prop.js",
+    "types": "lib/redux-render-prop.d.ts",
     "repository": {
         "url": "https://github.com/epeli/redux-render-prop"
     },
     "scripts": {
-        "test": "tsc --noEmit && jest",
-        "build": "tsc"
+        "test": "tsc && npm run dtslint && jest",
+        "build": "npm run test && tsc --project tsconfig.build.json && rm -rf lib && mv build/src lib && rm -rf build",
+        "dtslint": "tslint --project tsconfig.dtslint.json",
+        "clean": "rm -rf lib build"
     },
     "author": "",
     "license": "ISC",
@@ -16,7 +19,6 @@
         "build/src",
         "typings/src"
     ],
-    "types": "./typings/src/redux-render-prop.d.ts",
     "devDependencies": {
         "@types/jest": "^23.3.2",
         "@types/react": "^16.4.14",
@@ -34,5 +36,9 @@
     },
     "peerDependencies": {
         "react-redux": "5.x"
+    },
+    "dependencies": {
+        "dtslint": "^0.3.0",
+        "tslint": "^5.11.0"
     }
 }
