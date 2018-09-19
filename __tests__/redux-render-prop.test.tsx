@@ -666,10 +666,6 @@ test("memoizeMapState can optimize rendering", () => {
         prepareActions: dispatch => ({}),
     });
 
-    const saved = initialState.list.map(foo => ({
-        upper: foo.bar.toLocaleUpperCase(),
-    }));
-
     const FooConnect = createComponent({
         memoizeMapState: state => {
             const sel = createSelector(
