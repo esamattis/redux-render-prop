@@ -709,3 +709,62 @@ test("memoizeMapState can optimize rendering", () => {
 
     expect(renderSpy).toBeCalledTimes(1);
 });
+
+test("own props are cached by shallow equality", () => {
+    const mapSpy = jest.fn();
+    const initialState = {foo: "initialfoo", bar: "initialbar"};
+    const fooAction = {type: "NEW_FOO", foo: "newfoo"};
+
+    function reducer(
+        state: typeof initialState,
+        action: typeof fooAction,
+    ): typeof initialState {
+        if (action.type === "NEW_FOO") {
+            return {...state, foo: action.foo};
+        }
+
+        return state;
+    }
+
+    const createComponent = makeComponentCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    let prevProps: any = null;
+    const FooConnect = createComponent({
+        mapState: (state, props: {ding: number}) => {
+            mapSpy();
+
+            if (prevProps) {
+                expect(prevProps).toBe(props);
+            }
+
+            if (!prevProps) {
+                prevProps = props;
+            }
+
+            return {mappedFoo: state.foo};
+        },
+        mapActions: actions => actions,
+    });
+
+    const store = createStore(reducer as any, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect
+                    ding={1}
+                    render={(data, actions) => <div>{data.mappedFoo}</div>}
+                />
+            </div>
+        </Provider>
+    );
+
+    render(<App />);
+
+    store.dispatch({type: "NEW_FOO", foo: "secondfoo"});
+
+    expect(mapSpy).toHaveBeenCalledTimes(2);
+});

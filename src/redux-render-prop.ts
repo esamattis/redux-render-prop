@@ -78,7 +78,10 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                         ownPropsCache,
                         ownProps,
                     );
-                    ownPropsCache = ownProps;
+
+                    if (ownPropsChanged) {
+                        ownPropsCache = ownProps;
+                    }
 
                     const renderChanged = prevRender !== render;
                     prevRender = render;
