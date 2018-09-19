@@ -39,6 +39,51 @@ test("can render data to react", () => {
     expect(el.innerHTML).toBe("bar");
 });
 
+test("can only use mapActions", () => {
+    const initialState = {foo: "bar"};
+    const actionSpy = jest.fn();
+
+    const createComponent = makeComponentCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    const FooConnect = createComponent({
+        mapActions: state => ({
+            testAction: () => {
+                actionSpy();
+            },
+        }),
+    });
+    const store = createStore(s => s, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect
+                    render={(_, actions) => (
+                        <button
+                            data-testid="button"
+                            onClick={actions.testAction}
+                        >
+                            buttontext
+                        </button>
+                    )}
+                />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const button = rtl.getByTestId("button");
+
+    fireEvent.click(button);
+
+    expect(button.innerHTML).toBe("buttontext");
+    expect(actionSpy).toHaveBeenCalledTimes(1);
+});
+
 test("can use actions", () => {
     const initialState = {foo: "bar"};
 

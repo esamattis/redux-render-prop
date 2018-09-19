@@ -28,7 +28,7 @@ function isRenderNull(o: any): o is RenderNull {
 }
 
 const reduxRenderPropRender = (props: InternalProps) => {
-    if (props.mappedState.__renderNull) {
+    if (props.mappedState && props.mappedState.__renderNull) {
         return null;
     }
 
