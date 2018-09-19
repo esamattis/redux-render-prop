@@ -11,7 +11,7 @@ interface InternalProps {
 
 /**
  * Throw in mapState to force null rendering.
- * 
+ *
  * Experimental API. Do not use.
  */
 export class RenderNull extends Error {
@@ -45,6 +45,10 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
         OwnProps
     >(options: {
         mapState?: (state: State, ownProps: OwnProps) => MappedState;
+        memoizeMapState?: (
+            state: State,
+            ownProps: OwnProps,
+        ) => (state: State, ownProps: OwnProps) => MappedState;
         mapActions?: (actions: Actions, ownProps: OwnProps) => MappedActions;
     }) {
         const RenderPropComponent = connectAdvanced(
@@ -58,6 +62,13 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                 let prevRender: any = null;
 
                 let finalPropsCache: any = {};
+
+                let memoizedMapState:
+                    | null
+                    | ((
+                          state: State,
+                          ownProps: OwnProps,
+                      ) => MappedState) = null;
 
                 return (state, {render, ...ownProps}: any) => {
                     const stateChanged = state !== prevState;
@@ -76,13 +87,25 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
 
                     let resultChanged = false;
 
-                    if (options.mapState && someArgumentChanged) {
+                    const preparedState = makeOptions.prepareState(state);
+
+                    if (!memoizedMapState && options.memoizeMapState) {
+                        console.log("memoizedMapState", memoizedMapState);
+                        memoizedMapState = options.memoizeMapState(
+                            preparedState,
+                            ownPropsCache,
+                        );
+                    }
+
+                    const mapState = memoizedMapState || options.mapState;
+
+                    if (mapState && someArgumentChanged) {
                         let newMappedState = {};
 
                         try {
-                            newMappedState = options.mapState(
-                                makeOptions.prepareState(state),
-                                ownProps,
+                            newMappedState = mapState(
+                                preparedState,
+                                ownPropsCache,
                             );
                         } catch (error) {
                             if (isRenderNull(error)) {
@@ -107,7 +130,7 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
 
                         const newMappedActions = options.mapActions(
                             preparedActions,
-                            ownProps,
+                            ownPropsCache,
                         );
                         if (
                             !shallowEqual(newMappedActions, mappedActionsCache)

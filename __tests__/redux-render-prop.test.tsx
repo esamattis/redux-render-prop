@@ -1,5 +1,6 @@
 import React from "react";
 import {render, fireEvent, cleanup} from "react-testing-library";
+import {createSelector} from "reselect";
 import {makeComponentCreator, RenderNull} from "../src/redux-render-prop";
 import {createStore} from "redux";
 import {Provider} from "react-redux";
@@ -637,4 +638,78 @@ test("renders null when RenderNull is thrown from mapState", () => {
     const el = rtl.getByTestId("container");
 
     expect(el.innerHTML).toBe("startend");
+});
+
+test("memoizeMapState can optimize rendering", () => {
+    const renderSpy = jest.fn();
+
+    const initialState = {
+        other: "init",
+        list: [{bar: "first"}, {bar: "second"}],
+    };
+
+    const fooAction = {type: "SET_OTHER", other: "othernew"};
+
+    function reducer(
+        state: typeof initialState,
+        action: typeof fooAction,
+    ): typeof initialState {
+        if (action.type === "SET_OTHER") {
+            return {...state, other: action.other};
+        }
+
+        return state;
+    }
+
+    const createComponent = makeComponentCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    const saved = initialState.list.map(foo => ({
+        upper: foo.bar.toLocaleUpperCase(),
+    }));
+
+    const FooConnect = createComponent({
+        memoizeMapState: state => {
+            const sel = createSelector(
+                (s: typeof state) => s.list,
+                list =>
+                    list.map(foo => ({
+                        upper: foo.bar.toLocaleUpperCase(),
+                    })),
+            );
+
+            return state => {
+                return {
+                    mappedFoo: sel(state),
+                };
+            };
+        },
+    });
+
+    const store = createStore(reducer as any, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect
+                    render={data => (
+                        <div>
+                            {(renderSpy(), null)}
+                            {data.mappedFoo.map((foo, i) => (
+                                <div key={i}>{foo.upper}</div>
+                            ))}
+                        </div>
+                    )}
+                />
+            </div>
+        </Provider>
+    );
+
+    render(<App />);
+
+    store.dispatch(fooAction);
+
+    expect(renderSpy).toBeCalledTimes(1);
 });
