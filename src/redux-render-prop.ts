@@ -9,6 +9,16 @@ interface InternalProps {
     render: Function;
 }
 
+export type MappedState<T extends {__data: any}> = T extends {__data: infer V}
+    ? V
+    : never;
+
+export type MappedActions<T extends {__actions: any}> = T extends {
+    __actions: infer V;
+}
+    ? V
+    : never;
+
 /**
  * Throw in mapState to force null rendering.
  *
@@ -163,6 +173,9 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                     actions: MappedActions,
                 ) => ReactNode;
             }
-        >;
+        > & {
+            __data: MappedState;
+            __actions: MappedActions;
+        };
     };
 }

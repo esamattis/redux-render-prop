@@ -1,5 +1,9 @@
 import React from "react";
-import {makeComponentCreator} from "../src/redux-render-prop";
+import {
+    makeComponentCreator,
+    MappedState,
+    MappedActions,
+} from "../src/redux-render-prop";
 
 const initialState = {foo: 2};
 
@@ -16,7 +20,18 @@ const FooConnect = createComponent({
             bar: String(state.foo),
         };
     },
+    mapActions: () => ({
+        hello() {
+            return "hello";
+        },
+    }),
 });
+
+// $ExpectType { bar: string; }
+type MappedStateType = MappedState<typeof FooConnect>;
+
+// $ExpectType { hello(): "hello"; }
+type MappedActionsType = MappedActions<typeof FooConnect>;
 
 const TestBasic = () => (
     <div>
