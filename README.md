@@ -1,5 +1,7 @@
 # redux-render-prop
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/epeli/redux-render-prop.svg)](https://greenkeeper.io/)
+
 Redux with [render props][1]. Alternative to the `connect()` higher order component.
 
 Very TypeScript friendly. It heavily leverages type inference to
