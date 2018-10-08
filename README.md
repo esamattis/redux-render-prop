@@ -116,4 +116,36 @@ const FooConnect = createComponent({
 });
 ```
 
+## Flattening render props
+
+If you find yourself nesting too much you can flatten
+the render callbacks type safely with the `MappedState` and `MappedActions`
+type helpers like so:
+
+```tsx
+import {MappedState, MappedActions} from "redux-render-prop";
+
+class MyComponent {
+    renderCounter(
+        data: MappedState<typeof CounterConnect>,
+        actions: MappedActions<typeof CounterConnect>,
+    ) {
+        return <button onClick={actions.inc}>{data.count}</button>;
+    }
+
+    render() {
+        return (
+            <CounterConnect name="foo" render={this.renderCounter.bind(this)} />
+        );
+    }
+}
+```
+
+There a catch thou: You must use `.bind()` in the render to generate new
+function indentity for each render. Otherwise the `renderCounter()` method
+won't get called. This is a limitation in the react-redux `connectAdvanced()`
+HOC which requires new props to render.
+
+Also the `.bind()` is only completely typesafe with [TypeScript 3.2's `--strictBindCallApply`](https://github.com/Microsoft/TypeScript/pull/27028).
+
 [1]: https://reactjs.org/docs/render-props.html

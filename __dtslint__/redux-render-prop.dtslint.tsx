@@ -66,3 +66,13 @@ const TestPropTypeError2 = () => (
         />
     </div>
 );
+
+class MyComponent {
+    renderFoo(data: MappedState<typeof FooConnect>) {
+        return <span>{data.bar}</span>;
+    }
+
+    render() {
+        return <FooConnect id="1" render={this.renderFoo.bind(this)} />;
+    }
+}
