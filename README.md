@@ -149,3 +149,8 @@ HOC which requires new props to render.
 Also the `.bind()` is only completely typesafe with [TypeScript 3.2's `--strictBindCallApply`](https://github.com/Microsoft/TypeScript/pull/27028).
 
 [1]: https://reactjs.org/docs/render-props.html
+
+
+If you enjoy this checkout
+[immer-reducer](https://github.com/epeli/immer-reducer) for type safe Action
+Creators and reducers.
