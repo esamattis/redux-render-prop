@@ -150,6 +150,7 @@ Also the `.bind()` is only completely typesafe with [TypeScript 3.2's `--strictB
 
 [1]: https://reactjs.org/docs/render-props.html
 
+## Type Safe Action Creators and Reducers?
 
 If you enjoy this checkout
 [immer-reducer](https://github.com/epeli/immer-reducer) for type safe Action
