@@ -42,6 +42,10 @@ const reduxRenderPropRender = (props: InternalProps) => {
         return null;
     }
 
+    if (typeof props.render !== "function") {
+        return null;
+    }
+
     return props.render(props.mappedState, props.mappedActions);
 };
 
@@ -80,8 +84,10 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                           ownProps: OwnProps,
                       ) => MappedState) = null;
 
-                return (state, {render, ...ownProps}: any) => {
+                return (state, {children, render, ...ownProps}: any) => {
+                    const passRender = children || render;
                     const stateChanged = state !== prevState;
+
                     prevState = state;
 
                     const ownPropsChanged = !shallowEqual(
@@ -93,8 +99,8 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                         ownPropsCache = ownProps;
                     }
 
-                    const renderChanged = prevRender !== render;
-                    prevRender = render;
+                    const renderChanged = prevRender !== passRender;
+                    prevRender = passRender;
 
                     const someArgumentChanged = stateChanged || ownPropsChanged;
 
@@ -156,7 +162,7 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
                         finalPropsCache = {
                             mappedState: mappedStateCache,
                             mappedActions: mappedActionsCache,
-                            render: render,
+                            render: passRender,
                         };
                     }
 
@@ -168,7 +174,11 @@ export function makeComponentCreator<State, Actions>(makeOptions: {
         // But return the component with proper types
         return (RenderPropComponent as any) as StatelessComponent<
             OwnProps & {
-                render: (
+                children?: (
+                    data: MappedState,
+                    actions: MappedActions,
+                ) => ReactNode;
+                render?: (
                     data: MappedState,
                     actions: MappedActions,
                 ) => ReactNode;

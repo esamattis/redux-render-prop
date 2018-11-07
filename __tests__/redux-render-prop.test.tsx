@@ -39,6 +39,36 @@ test("can render data to react", () => {
     expect(el.innerHTML).toBe("bar");
 });
 
+test("can render data to react children function", () => {
+    const initialState = {foo: "bar"};
+
+    const createComponent = makeComponentCreator({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    const FooConnect = createComponent({
+        mapState: state => ({mappedFoo: state.foo}),
+    });
+    const store = createStore(s => s, initialState);
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <FooConnect>
+                    {data => <div data-testid="foo">{data.mappedFoo}</div>}
+                </FooConnect>
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const el = rtl.getByTestId("foo");
+
+    expect(el.innerHTML).toBe("bar");
+});
+
 test("can only use mapActions", () => {
     const initialState = {foo: "bar"};
     const actionSpy = jest.fn();
@@ -608,9 +638,8 @@ test("prepare actions is called only once per mount", () => {
                     <div data-testid="parent-count-outer">
                         {this.state.count}
                     </div>
-                    <FooConnect
-                        propArg={String(this.state.count)}
-                        render={data => (
+                    <FooConnect propArg={String(this.state.count)}>
+                        {data => (
                             <div>
                                 <div data-testid="foo">{data.mappedFoo}</div>
                                 <div data-testid="parent-count-inner">
@@ -618,7 +647,7 @@ test("prepare actions is called only once per mount", () => {
                                 </div>
                             </div>
                         )}
-                    />
+                    </FooConnect>
                 </div>
             );
         }
