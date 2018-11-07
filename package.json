@@ -12,7 +12,7 @@
     "build": "npm run test && tsc --project tsconfig.build.json && rm -rf lib && mv build/src lib && rm -rf build",
     "dtslint": "tslint --project tsconfig.dtslint.json",
     "clean": "rm -rf lib build",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "author": "",
   "license": "ISC",
