@@ -5,6 +5,10 @@ import {
     MappedActions,
 } from "../src/redux-render-prop";
 
+// for asserting types
+let num: number = 1;
+let str: string = "";
+
 const initialState = {foo: 2};
 
 const createComponent = makeComponentCreator({
@@ -14,7 +18,10 @@ const createComponent = makeComponentCreator({
 
 const FooConnect = createComponent({
     mapState: (state, props: {id: string}) => {
-        state.foo; // $ExpectType number
+        num = state.foo;
+
+        // $ExpectError
+        str = state.foo;
 
         return {
             bar: String(state.foo),
@@ -27,18 +34,25 @@ const FooConnect = createComponent({
     }),
 });
 
-// $ExpectType { bar: string; }
-type MappedStateType = MappedState<typeof FooConnect>;
+declare const mappedState: MappedState<typeof FooConnect>;
+const mappedStateAssign: {bar: string} = mappedState;
+// $ExpectError
+num = mappedState;
 
-// $ExpectType { hello(): "hello"; }
-type MappedActionsType = MappedActions<typeof FooConnect>;
+declare const mappedActions: MappedActions<typeof FooConnect>;
+const mappedActionsAssign: {hello(): "hello"} = mappedActions;
+// $ExpectError
+num = mappedActions;
 
 const TestBasic = () => (
     <div>
         <FooConnect
             id="1"
             render={data => {
-                data.bar; // $ExpectType string
+                str = data.bar;
+
+                // $ExpectError
+                num = data.bar;
 
                 return <span>{data.bar}</span>;
             }}
