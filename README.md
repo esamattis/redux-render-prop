@@ -76,12 +76,14 @@ const CounterConnect = createAppComponent({
 const App = () => (
     <div>
         <CounterConnect
-            name="foo" // required by the ownProps type
-            render={(data, actions) => (
+            // required by the ownProps type
+            name="foo"
+        >
+            {(data, actions) => (
                 // Fully typed data and actions
                 <button onClick={actions.inc}>{data.count}</button>
             )}
-        />
+        </CounterConnect>
     </div>
 );
 ```
