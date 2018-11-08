@@ -4,6 +4,8 @@
 
 Redux with [render props][1]. Alternative to the `connect()` higher order component.
 
+[1]: https://reactjs.org/docs/render-props.html
+
 Very TypeScript friendly. It heavily leverages type inference to
 avoid manual typing of props.
 
@@ -41,7 +43,7 @@ const ActionCreators = {
 
 // Create render prop component creator with app specific types.
 // There is usually only one of these per app
-const createAppComponent = makeConnector({
+const createAppConnect = makeConnector({
     // Component creators infer the state type from here.
     //
     // It is possible to return only part of the state here
@@ -57,7 +59,7 @@ const createAppComponent = makeConnector({
 });
 
 // Create render prop component for counters.
-const CounterConnect = createAppComponent({
+const CounterConnect = createAppConnect({
     // State type is infered from the prepareState return value
     mapState: (state, ownProps: {name: string}) => ({
         count: state.counters[ownProps.name].count,
@@ -143,7 +145,28 @@ class MyComponent {
 
 NOTE the `.bind()` is only completely typesafe with [TypeScript 3.2's `--strictBindCallApply`](https://github.com/Microsoft/TypeScript/pull/27028).
 
-[1]: https://reactjs.org/docs/render-props.html
+You can also use it to pass the props to class components if you need to access
+the mapped state from lifecycle methods.
+
+```tsx
+class ClassComponent extends React.Component<
+    MappedState<typeof CounterConnect>
+> {
+    componentDidMount() {
+        // do something with this.props.count
+    }
+
+    render() {
+        return <div>{this.props.count}</div>;
+    }
+}
+
+export default () => (
+    <CounterConnect name="wrapped">
+        {data => <ClassComponent {...data} />}
+    </CounterConnect>
+);
+```
 
 ## Type Safe Action Creators and Reducers?
 
