@@ -90,36 +90,6 @@ const App = () => (
 );
 ```
 
-## Memoizing
-
-For high performance situations you may use `memoizeMapState()` to create memoized
-selectors on component mount.
-
-```tsx
-const FooConnect = createComponent({
-    // The initialState is the state at the time of the component
-    // mount and it won't change during the component lifetime.
-    // Same goes for the initialOwnProps.
-    memoizeMapState: (initialState, initialOwnProps) => {
-        // using the reselect module
-        const selectFoosOnly = createSelector(
-            (s: typeof initialState) => s.list,
-            list =>
-                list.map(obj => ({
-                    foo: obj.foo,
-                })),
-        );
-
-        // Return the actual mapState function
-        return (state, ownProps) => {
-            return {
-                foos: selectFoosOnly(state),
-            };
-        };
-    },
-});
-```
-
 ## Flattening render props
 
 If you find yourself nesting too much you can flatten
@@ -164,6 +134,36 @@ export default () => (
         {data => <ClassComponent {...data} />}
     </CounterConnect>
 );
+```
+
+## Memoizing
+
+For advanced high performance situations you may use `memoizeMapState()` to
+create memoized selectors on component mount.
+
+```tsx
+const FooConnect = createComponent({
+    // The initialState is the state at the time of the component
+    // mount and it won't change during the component lifetime.
+    // Same goes for the initialOwnProps.
+    memoizeMapState: (initialState, initialOwnProps) => {
+        // using the reselect module
+        const selectFoosOnly = createSelector(
+            (s: typeof initialState) => s.list,
+            list =>
+                list.map(obj => ({
+                    foo: obj.foo,
+                })),
+        );
+
+        // Return the actual mapState function
+        return (state, ownProps) => {
+            return {
+                foos: selectFoosOnly(state),
+            };
+        };
+    },
+});
 ```
 
 ## Type Safe Action Creators and Reducers?
