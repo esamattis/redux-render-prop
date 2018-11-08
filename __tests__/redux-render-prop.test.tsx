@@ -1,7 +1,7 @@
 import React from "react";
 import {render, fireEvent, cleanup} from "react-testing-library";
 import {createSelector} from "reselect";
-import {makeConnector, RenderNull} from "../src/redux-render-prop";
+import {makeConnector, RenderNull, MappedState} from "../src/redux-render-prop";
 import {createStore} from "redux";
 import {Provider} from "react-redux";
 
@@ -283,7 +283,7 @@ test("state can be updated", () => {
 
 test("unrelated state updates don't cause render", () => {
     const initialState = {foo: "initialfoo", bar: "initialbar"};
-    const fooAction = {type: "NEW_FOO", foo: "newfoo"};
+    const fooAction = {type: "NEW_FOO", foo: "first"};
     const renderSpy = jest.fn();
     const fooReducerSpy = jest.fn();
 
@@ -334,6 +334,11 @@ test("unrelated state updates don't cause render", () => {
     store.dispatch(fooAction);
 
     expect(fooReducerSpy).toHaveBeenCalledTimes(1);
+    expect(renderSpy).toHaveBeenCalledTimes(1);
+
+    store.dispatch({type: "NEW_FOO", foo: "second"});
+
+    expect(fooReducerSpy).toHaveBeenCalledTimes(2);
     expect(renderSpy).toHaveBeenCalledTimes(1);
 });
 
@@ -841,4 +846,66 @@ test("own props are cached by shallow equality", () => {
     store.dispatch({type: "NEW_FOO", foo: "secondfoo"});
 
     expect(mapSpy).toHaveBeenCalledTimes(2);
+});
+
+test("can render without render prop change", () => {
+    const initialState = {foo: "bar"};
+    const renderConnectSpy = jest.fn();
+
+    const createConnect = makeConnector({
+        prepareState: state => state as typeof initialState,
+        prepareActions: dispatch => ({}),
+    });
+
+    const FooConnect = createConnect({
+        mapState: state => ({mappedFoo: state.foo}),
+    });
+
+    const store = createStore(s => s, initialState);
+
+    class ParentContainer extends React.Component {
+        state = {count: 1};
+
+        increment = () => {
+            this.setState({count: this.state.count + 1});
+        };
+
+        renderConnect = (data: MappedState<typeof FooConnect>) => {
+            renderConnectSpy();
+            return (
+                <div>
+                    <div data-testid="foo">{data.mappedFoo}</div>
+                </div>
+            );
+        };
+
+        render() {
+            const {count} = this.state;
+
+            return (
+                <div>
+                    <button data-testid="button" onClick={this.increment}>
+                        inc
+                    </button>
+                    <div data-testid="parent-count-outer">{count}</div>
+                    <FooConnect render={this.renderConnect} />
+                </div>
+            );
+        }
+    }
+
+    const App = () => (
+        <Provider store={store}>
+            <div>
+                <ParentContainer />
+            </div>
+        </Provider>
+    );
+
+    const rtl = render(<App />);
+
+    const button = rtl.getByTestId("button");
+    fireEvent.click(button);
+
+    expect(renderConnectSpy).toHaveBeenCalledTimes(2);
 });

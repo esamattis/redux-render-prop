@@ -74,6 +74,7 @@ export function makeConnector<State, Actions>(makeOptions: {
 
                 let prevState: Object = {};
                 let prevRender: any = null;
+                let ghostMapping = true;
 
                 let finalPropsCache: any = {};
 
@@ -99,7 +100,7 @@ export function makeConnector<State, Actions>(makeOptions: {
                         ownPropsCache = ownProps;
                     }
 
-                    const renderChanged = prevRender !== passRender;
+                    const renderFunctionChanged = prevRender !== passRender;
                     prevRender = passRender;
 
                     let mappedStateChanged = false;
@@ -116,6 +117,7 @@ export function makeConnector<State, Actions>(makeOptions: {
 
                     const mapState = memoizedMapState || options.mapState;
 
+                    // Execute mapState only when the state or the ownPropsChanged
                     if (mapState && (stateChanged || ownPropsChanged)) {
                         let newMappedState = {};
 
@@ -157,10 +159,52 @@ export function makeConnector<State, Actions>(makeOptions: {
                         }
                     }
 
+                    // For debugging
+                    // console.log("MAPPING", {
+                    //     mappedStateChanged,
+                    //     mappedActionsChanged,
+                    //     renderChanged,
+                    //     stateChanged,
+                    //     ownPropsChanged,
+                    // });
+
+                    // Force rendering when nothing changes. This seems bit
+                    // weird at first but we must do this because we must be
+                    // able to render when the render function is an instance
+                    // method of class whose idendity does not change. Ie. the
+                    // render is only caused by the parent component for
+                    // whatever reason.
+                    //
+                    // The reference of the data-argument in the render function
+                    // does not change so this won't cause any extra rendering
+                    // down stream.
+                    let forcePlainRender =
+                        !mappedStateChanged &&
+                        !mappedActionsChanged &&
+                        !renderFunctionChanged &&
+                        !stateChanged &&
+                        !ownPropsChanged;
+
+                    // This is weird situation after the initial mount, render
+                    // and state mapping because this function gets called again
+                    // without any changes! We can just skip this "ghost
+                    // mapping". I think this might be a bug in react-redux.
+                    if (ghostMapping && forcePlainRender) {
+                        forcePlainRender = false;
+                        ghostMapping = false;
+                    }
+
+                    // This is where we decide when to render the wrapped
+                    // component. connectAdvanced() triggers rendering when a
+                    // new reference is returned so we update the the
+                    // finalPropsCache only when absolutely required.
                     if (
+                        forcePlainRender ||
                         mappedStateChanged ||
                         mappedActionsChanged ||
-                        renderChanged
+                        // renderFunctionChanged can be the same function with
+                        // new closure or completely different implementation
+                        renderFunctionChanged
                     ) {
                         finalPropsCache = {
                             mappedState: mappedStateCache,

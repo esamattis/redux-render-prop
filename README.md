@@ -136,17 +136,10 @@ class MyComponent {
     }
 
     render() {
-        return (
-            <CounterConnect name="foo" render={this.renderCounter.bind(this)} />
-        );
+        return <CounterConnect name="foo">{this.renderCounter}</CounterConnect>;
     }
 }
 ```
-
-There a catch thou: You must use `.bind()` in the render to generate new
-function indentity for each render. Otherwise the `renderCounter()` method
-won't get called. This is a limitation in the react-redux `connectAdvanced()`
-HOC which requires new props to render.
 
 Also the `.bind()` is only completely typesafe with [TypeScript 3.2's `--strictBindCallApply`](https://github.com/Microsoft/TypeScript/pull/27028).
 
