@@ -189,3 +189,10 @@ export function makeConnector<State, Actions>(makeOptions: {
         };
     };
 }
+
+// Old removed api with nice error message
+export function makeComponentCreator(
+    a: "makeComponentCreator is renamed to makeConnector",
+): "makeComponentCreator is renamed to makeConnector" {
+    throw new Error("makeComponentCreator is renamed to makeConnector");
+}
