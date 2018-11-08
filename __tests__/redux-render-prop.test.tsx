@@ -10,12 +10,12 @@ afterEach(cleanup);
 test("can render data to react", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
     });
     const store = createStore(s => s, initialState);
@@ -42,12 +42,12 @@ test("can render data to react", () => {
 test("can render data to react children function", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
     });
     const store = createStore(s => s, initialState);
@@ -73,12 +73,12 @@ test("can only use mapActions", () => {
     const initialState = {foo: "bar"};
     const actionSpy = jest.fn();
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapActions: state => ({
             testAction: () => {
                 actionSpy();
@@ -119,12 +119,12 @@ test("can use actions", () => {
 
     const spyAction = jest.fn();
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({spyAction}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
         mapActions: actions => actions,
     });
@@ -159,12 +159,12 @@ test("can use actions", () => {
 test("parent container can cause render prop to render", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
     });
 
@@ -236,7 +236,7 @@ test("state can be updated", () => {
         return state;
     }
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             newFoo() {
@@ -245,7 +245,7 @@ test("state can be updated", () => {
         }),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
         mapActions: actions => actions,
     });
@@ -299,12 +299,12 @@ test("unrelated state updates don't cause render", () => {
         return state;
     }
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const BarConnect = createComponent({
+    const BarConnect = createConnect({
         mapState: state => ({mappedBar: state.bar}),
         mapActions: actions => actions,
     });
@@ -340,12 +340,12 @@ test("unrelated state updates don't cause render", () => {
 test("can use ownprops in map state", () => {
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: (state, props: {extra: string}) => ({
             mappedFoo: state.foo + props.extra,
         }),
@@ -389,14 +389,14 @@ test("can use ownprops in map actions", () => {
         return state;
     }
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             dispatch,
         }),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: (state, ownProps: {propArg: string}) => ({
             mappedFoo: state.foo,
         }),
@@ -449,7 +449,7 @@ test("static own props won't cause useless state or action mapping", () => {
 
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => {
             prepareActionsSpy();
@@ -459,7 +459,7 @@ test("static own props won't cause useless state or action mapping", () => {
         },
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: (state, ownProps: {propArg: string}) => {
             mapStateSpy();
             return {
@@ -548,7 +548,7 @@ test("state change won't cause action mapping", () => {
         return state;
     }
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             newFoo() {
@@ -557,7 +557,7 @@ test("state change won't cause action mapping", () => {
         }),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
         mapActions: actions => {
             mapActionsSpy();
@@ -595,7 +595,7 @@ test("prepare actions is called only once per mount", () => {
 
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => {
             prepareActionsSpy();
@@ -605,7 +605,7 @@ test("prepare actions is called only once per mount", () => {
         },
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: (state, ownProps: {propArg: string}) => {
             mapStateSpy();
             return {
@@ -674,12 +674,12 @@ test("prepare actions is called only once per mount", () => {
 test("renders null when RenderNull is thrown from mapState", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: state => {
             if (state.foo === "bar") {
                 throw new RenderNull();
@@ -735,12 +735,12 @@ test("memoizeMapState can optimize rendering", () => {
         return state;
     }
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         memoizeMapState: state => {
             const sel = createSelector(
                 (s: typeof state) => s.list,
@@ -800,13 +800,13 @@ test("own props are cached by shallow equality", () => {
         return state;
     }
 
-    const createComponent = makeConnector({
+    const createConnect = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
 
     let prevProps: any = null;
-    const FooConnect = createComponent({
+    const FooConnect = createConnect({
         mapState: (state, props: {ding: number}) => {
             mapSpy();
 
