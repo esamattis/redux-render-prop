@@ -102,9 +102,8 @@ export function makeConnector<State, Actions>(makeOptions: {
                     const renderChanged = prevRender !== passRender;
                     prevRender = passRender;
 
-                    const someArgumentChanged = stateChanged || ownPropsChanged;
-
-                    let resultChanged = false;
+                    let mappedStateChanged = false;
+                    let mappedActionsChanged = false;
 
                     const preparedState = makeOptions.prepareState(state);
 
@@ -117,7 +116,7 @@ export function makeConnector<State, Actions>(makeOptions: {
 
                     const mapState = memoizedMapState || options.mapState;
 
-                    if (mapState && someArgumentChanged) {
+                    if (mapState && (stateChanged || ownPropsChanged)) {
                         let newMappedState = {};
 
                         try {
@@ -135,7 +134,7 @@ export function makeConnector<State, Actions>(makeOptions: {
 
                         if (!shallowEqual(newMappedState, mappedStateCache)) {
                             mappedStateCache = newMappedState;
-                            resultChanged = true;
+                            mappedStateChanged = true;
                         }
                     }
 
@@ -154,11 +153,15 @@ export function makeConnector<State, Actions>(makeOptions: {
                             !shallowEqual(newMappedActions, mappedActionsCache)
                         ) {
                             mappedActionsCache = newMappedActions;
-                            resultChanged = true;
+                            mappedActionsChanged = true;
                         }
                     }
 
-                    if (resultChanged || renderChanged) {
+                    if (
+                        mappedStateChanged ||
+                        mappedActionsChanged ||
+                        renderChanged
+                    ) {
                         finalPropsCache = {
                             mappedState: mappedStateCache,
                             mappedActions: mappedActionsCache,
