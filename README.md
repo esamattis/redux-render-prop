@@ -143,8 +143,6 @@ class MyComponent {
 }
 ```
 
-NOTE the `.bind()` is only completely typesafe with [TypeScript 3.2's `--strictBindCallApply`](https://github.com/Microsoft/TypeScript/pull/27028).
-
 You can also use it to pass the props to class components if you need to access
 the mapped state from lifecycle methods.
 
