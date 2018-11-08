@@ -1,7 +1,7 @@
 import React from "react";
 import {render, fireEvent, cleanup} from "react-testing-library";
 import {createSelector} from "reselect";
-import {makeComponentCreator, RenderNull} from "../src/redux-render-prop";
+import {makeConnector, RenderNull} from "../src/redux-render-prop";
 import {createStore} from "redux";
 import {Provider} from "react-redux";
 
@@ -10,7 +10,7 @@ afterEach(cleanup);
 test("can render data to react", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -42,7 +42,7 @@ test("can render data to react", () => {
 test("can render data to react children function", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -73,7 +73,7 @@ test("can only use mapActions", () => {
     const initialState = {foo: "bar"};
     const actionSpy = jest.fn();
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -119,7 +119,7 @@ test("can use actions", () => {
 
     const spyAction = jest.fn();
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({spyAction}),
     });
@@ -159,7 +159,7 @@ test("can use actions", () => {
 test("parent container can cause render prop to render", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -236,7 +236,7 @@ test("state can be updated", () => {
         return state;
     }
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             newFoo() {
@@ -299,7 +299,7 @@ test("unrelated state updates don't cause render", () => {
         return state;
     }
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -340,7 +340,7 @@ test("unrelated state updates don't cause render", () => {
 test("can use ownprops in map state", () => {
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -389,7 +389,7 @@ test("can use ownprops in map actions", () => {
         return state;
     }
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             dispatch,
@@ -449,7 +449,7 @@ test("static own props won't cause useless state or action mapping", () => {
 
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => {
             prepareActionsSpy();
@@ -548,7 +548,7 @@ test("state change won't cause action mapping", () => {
         return state;
     }
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({
             newFoo() {
@@ -595,7 +595,7 @@ test("prepare actions is called only once per mount", () => {
 
     const initialState = {foo: "initialfoo"};
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => {
             prepareActionsSpy();
@@ -674,7 +674,7 @@ test("prepare actions is called only once per mount", () => {
 test("renders null when RenderNull is thrown from mapState", () => {
     const initialState = {foo: "bar"};
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -735,7 +735,7 @@ test("memoizeMapState can optimize rendering", () => {
         return state;
     }
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });
@@ -800,7 +800,7 @@ test("own props are cached by shallow equality", () => {
         return state;
     }
 
-    const createComponent = makeComponentCreator({
+    const createComponent = makeConnector({
         prepareState: state => state as typeof initialState,
         prepareActions: dispatch => ({}),
     });

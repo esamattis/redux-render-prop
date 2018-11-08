@@ -1,8 +1,8 @@
 import React from "react";
 import {
-    makeComponentCreator,
     MappedState,
     MappedActions,
+    makeConnector,
 } from "../src/redux-render-prop";
 
 // for asserting types
@@ -11,7 +11,7 @@ let str: string = "";
 
 const initialState = {foo: 2};
 
-const createComponent = makeComponentCreator({
+const createComponent = makeConnector({
     prepareState: state => state as typeof initialState,
     prepareActions: dispatch => ({}),
 });

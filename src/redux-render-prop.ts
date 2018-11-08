@@ -49,7 +49,7 @@ const reduxRenderPropRender = (props: InternalProps) => {
     return props.render(props.mappedState, props.mappedActions);
 };
 
-export function makeComponentCreator<State, Actions>(makeOptions: {
+export function makeConnector<State, Actions>(makeOptions: {
     prepareState: (state: any) => State;
     prepareActions: (dispatch: Dispatch<AnyAction>) => Actions;
 }) {

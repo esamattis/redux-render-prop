@@ -22,8 +22,8 @@ npm install @types/react-dom @types/react @types/react-redux
 Usage
 
 ```ts
+import {makeConnector} from "redux-render-prop";
 import {bindActionCreators} from "redux";
-import {makeComponentCreator} from "redux-render-prop";
 
 // Define state as a single type
 interface State {
@@ -41,7 +41,7 @@ const ActionCreators = {
 
 // Create render prop component creator with app specific types.
 // There is usually only one of these per app
-const createAppComponent = makeComponentCreator({
+const createAppComponent = makeConnector({
     // Component creators infer the state type from here.
     //
     // It is possible to return only part of the state here
