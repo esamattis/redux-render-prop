@@ -441,7 +441,7 @@ test("can use ownprops in map actions", () => {
     expect(button.innerHTML).toBe("BASE|ACTION_ARG|PROP_ARG");
 });
 
-test("ownprops won't cause useless state or action mapping", () => {
+test("static own props won't cause useless state or action mapping", () => {
     const mapStateSpy = jest.fn();
     const mapActionsSpy = jest.fn();
     const prepareActionsSpy = jest.fn();
