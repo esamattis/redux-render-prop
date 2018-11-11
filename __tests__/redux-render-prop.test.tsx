@@ -880,7 +880,8 @@ test("can render without render prop change", () => {
             renderConnectSpy();
             return (
                 <div>
-                    <div data-testid="foo">{data.mappedFoo}</div>
+                    <div data-testid="data">{data.mappedFoo}</div>
+                    <div data-testid="state">{this.state.count}</div>
                 </div>
             );
         };
@@ -914,4 +915,10 @@ test("can render without render prop change", () => {
     fireEvent.click(button);
 
     expect(renderConnectSpy).toHaveBeenCalledTimes(2);
+
+    const data = rtl.getByTestId("data");
+    const stateCount = rtl.getByTestId("state");
+
+    expect(data.innerHTML).toBe("bar");
+    expect(stateCount.innerHTML).toBe("2");
 });
