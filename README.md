@@ -168,8 +168,8 @@ const FooConnect = createComponent({
 });
 ```
 
-## Type Safe Action Creators and Reducers?
+## Examples
 
-If you enjoy this checkout
-[immer-reducer](https://github.com/epeli/immer-reducer) for type safe Action
-Creators and reducers.
+Here's a more complete example with [Immer Reducer](https://github.com/epeli/immer-reducer):
+
+<https://github.com/epeli/typescript-redux-todoapp>
