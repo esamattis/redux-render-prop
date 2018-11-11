@@ -333,12 +333,18 @@ test("unrelated state updates don't cause render", () => {
 
     store.dispatch(fooAction);
 
+    // first dispatch: Just make sure the reducer is called
     expect(fooReducerSpy).toHaveBeenCalledTimes(1);
+
+    // first: should render once
     expect(renderSpy).toHaveBeenCalledTimes(1);
 
     store.dispatch({type: "NEW_FOO", foo: "second"});
 
+    // second dispatch: Just make sure the reducer is called
     expect(fooReducerSpy).toHaveBeenCalledTimes(2);
+
+    // second: should render once more
     expect(renderSpy).toHaveBeenCalledTimes(1);
 });
 

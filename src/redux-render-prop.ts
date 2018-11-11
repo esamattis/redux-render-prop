@@ -163,7 +163,7 @@ export function makeConnector<State, Actions>(makeOptions: {
                     // console.log("MAPPING", {
                     //     mappedStateChanged,
                     //     mappedActionsChanged,
-                    //     renderChanged,
+                    //     renderFunctionChanged,
                     //     stateChanged,
                     //     ownPropsChanged,
                     // });
