@@ -4,6 +4,8 @@
 
 Redux with [render props][1]. Alternative to the `connect()` higher order component.
 
+Read an introductory [blog post here](https://medium.com/@esamatti/type-safe-boilerplate-free-redux-906844ec6325).
+
 [1]: https://reactjs.org/docs/render-props.html
 
 Very TypeScript friendly. It heavily leverages type inference to
