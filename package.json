@@ -1,6 +1,6 @@
 {
   "name": "redux-render-prop",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Redux with render props. Typescript friendly.",
   "main": "lib/redux-render-prop.js",
   "types": "lib/redux-render-prop.d.ts",
@@ -21,7 +21,7 @@
   ],
   "devDependencies": {
     "@types/jest": "^23.3.9",
-    "@types/react": "^16.4.18",
+    "@types/react": "~16.4.18",
     "@types/react-dom": "^16.0.9",
     "@types/react-redux": "^6.0.9",
     "jest": "^23.6.0",
