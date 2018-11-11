@@ -336,7 +336,7 @@ test("unrelated state updates don't cause render", () => {
     // first dispatch: Just make sure the reducer is called
     expect(fooReducerSpy).toHaveBeenCalledTimes(1);
 
-    // first: should render once
+    // first: should rendered once
     expect(renderSpy).toHaveBeenCalledTimes(1);
 
     store.dispatch({type: "NEW_FOO", foo: "second"});
@@ -344,7 +344,7 @@ test("unrelated state updates don't cause render", () => {
     // second dispatch: Just make sure the reducer is called
     expect(fooReducerSpy).toHaveBeenCalledTimes(2);
 
-    // second: should render once more
+    // second: should have rendered again because the derived state did not change
     expect(renderSpy).toHaveBeenCalledTimes(1);
 });
 
