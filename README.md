@@ -116,7 +116,7 @@ class MyComponent {
 ```
 
 You can also use it to pass the props to class components if you need to access
-the mapped state from lifecycle methods.
+the mapped state or actions from lifecycle methods.
 
 ```tsx
 class ClassComponent extends React.Component<
@@ -140,7 +140,7 @@ export default () => (
 
 ## Memoizing
 
-For advanced high performance situations you may use `memoizeMapState()` to
+For advanced high performance you may use `memoizeMapState()` to
 create memoized selectors on component mount.
 
 ```tsx
