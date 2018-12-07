@@ -34,7 +34,7 @@
     "reselect": "^4.0.0",
     "typescript": "^3.1.6",
     "react-redux": "^5.1.0",
-    "dtslint": "^0.3.0",
+    "dtslint": "^0.4.0",
     "tslint": "^5.11.0"
   },
   "peerDependencies": {
