@@ -178,6 +178,6 @@ const FooConnect = createComponent({
 
 ## Examples
 
-Here's a more complete example with [Immer Reducer](https://github.com/epeli/immer-reducer):
+Here's a more complete example with [immer-reducer](https://github.com/epeli/immer-reducer):
 
 <https://github.com/epeli/typescript-redux-todoapp>
