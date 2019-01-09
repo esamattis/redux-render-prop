@@ -13,13 +13,13 @@ avoid manual typing of props.
 
 ## Install
 
-Install for react-redux 6.x
+For react-redux 6.x
 
 ```sh
-npm install redux-render-prop react-redux@6 # has peer dep of react-redux 5.x
+npm install redux-render-prop react-redux@6 # has peer dep of react-redux 6.x
 ```
 
-Install for react-redux 5.x (you must use pre 0.7 versions)
+For react-redux 5.x you must use pre 0.7 versions
 
 ```sh
 npm install redux-render-prop@0.6 react-redux@5 # has peer dep of react-redux 5.x
