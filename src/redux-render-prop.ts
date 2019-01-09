@@ -74,7 +74,6 @@ export function makeConnector<State, Actions>(makeOptions: {
 
                 let prevState: Object = {};
                 let prevRender: any = null;
-                let ghostMapping = true;
 
                 let finalPropsCache: any = {};
 
@@ -184,15 +183,6 @@ export function makeConnector<State, Actions>(makeOptions: {
                         !renderFunctionChanged &&
                         !stateChanged &&
                         !ownPropsChanged;
-
-                    // This is weird situation after the initial mount, render
-                    // and state mapping because this function gets called again
-                    // without any changes! We can just skip this "ghost
-                    // mapping". I think this might be a bug in react-redux.
-                    if (ghostMapping && forcePlainRender) {
-                        forcePlainRender = false;
-                        ghostMapping = false;
-                    }
 
                     // This is where we decide when to render the wrapped
                     // component. connectAdvanced() triggers rendering when a

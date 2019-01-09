@@ -18,7 +18,8 @@ test("can render data to react", () => {
     const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
     });
-    const store = createStore(s => s, initialState);
+
+    const store = createStore(s => s || initialState, initialState);
 
     const App = () => (
         <Provider store={store}>
@@ -50,7 +51,7 @@ test("can render data to react children function", () => {
     const FooConnect = createConnect({
         mapState: state => ({mappedFoo: state.foo}),
     });
-    const store = createStore(s => s, initialState);
+    const store = createStore(s => s || initialState, initialState);
 
     const App = () => (
         <Provider store={store}>
@@ -85,7 +86,7 @@ test("can only use mapActions", () => {
             },
         }),
     });
-    const store = createStore(s => s, initialState);
+    const store = createStore(s => s || initialState, initialState);
 
     const App = () => (
         <Provider store={store}>
@@ -128,7 +129,8 @@ test("can use actions", () => {
         mapState: state => ({mappedFoo: state.foo}),
         mapActions: actions => actions,
     });
-    const store = createStore(s => s, initialState);
+
+    const store = createStore(s => s || initialState, initialState);
 
     const App = () => (
         <Provider store={store}>
@@ -168,7 +170,7 @@ test("parent container can cause render prop to render", () => {
         mapState: state => ({mappedFoo: state.foo}),
     });
 
-    const store = createStore(s => s, initialState);
+    const store = createStore(s => s || initialState, initialState);
 
     class ParentContainer extends React.Component {
         state = {count: 1};
@@ -363,7 +365,7 @@ test("can use ownprops in map state", () => {
         mapActions: actions => actions,
     });
 
-    const store = createStore(s => s, initialState);
+    const store = createStore(s => s || initialState, initialState);
 
     const App = () => (
         <Provider store={store}>
@@ -485,7 +487,7 @@ test("static own props won't cause useless state or action mapping", () => {
         },
     });
 
-    const store = createStore(s => s, initialState);
+    const store = createStore(s => s || initialState, initialState);
 
     class ParentContainer extends React.Component {
         state = {count: 1};
@@ -631,7 +633,7 @@ test("prepare actions is called only once per mount", () => {
         },
     });
 
-    const store = createStore(s => s, initialState);
+    const store = createStore(s => s || initialState, initialState);
 
     class ParentContainer extends React.Component {
         state = {count: 1};
@@ -699,7 +701,8 @@ test("renders null when RenderNull is thrown from mapState", () => {
             return {mappedFoo: state.foo};
         },
     });
-    const store = createStore(s => s, initialState);
+
+    const store = createStore(s => s || initialState, initialState);
 
     const App = () => (
         <Provider store={store}>
@@ -867,7 +870,7 @@ test("can render without render prop change", () => {
         mapState: state => ({mappedFoo: state.foo}),
     });
 
-    const store = createStore(s => s, initialState);
+    const store = createStore(s => s || initialState, initialState);
 
     class ParentContainer extends React.Component {
         state = {count: 1};
