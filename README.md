@@ -11,6 +11,8 @@ Read an introductory [blog post here](https://medium.com/@esamatti/type-safe-boi
 Very TypeScript friendly. It heavily leverages type inference to
 avoid manual typing of props.
 
+## Install
+
 Install for react-redux 6.x
 
 ```sh
@@ -29,7 +31,7 @@ For Typescript you will need the types too
 npm install @types/react-dom @types/react @types/react-redux
 ```
 
-Usage
+## Usage
 
 ```ts
 import {makeConnector} from "redux-render-prop";
