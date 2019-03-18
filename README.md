@@ -102,9 +102,9 @@ const App = () => (
 
 ## Flattening render props
 
-If you find yourself nesting too much you can flatten
-the render callbacks type safely with the `MappedState` and `MappedActions`
-type helpers like so:
+If you find yourself nesting too much you can flatten the render callbacks
+type safely with the `MappedState`, `MappedActions` and
+`MappedStateAndActions` type helpers like so:
 
 ```tsx
 import {MappedState, MappedActions} from "redux-render-prop";
@@ -128,7 +128,7 @@ the mapped state or actions from lifecycle methods.
 
 ```tsx
 class ClassComponent extends React.Component<
-    MappedState<typeof CounterConnect>
+    MappedStateAndActions<typeof CounterConnect>
 > {
     componentDidMount() {
         // do something with this.props.count

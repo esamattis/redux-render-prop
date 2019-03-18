@@ -1,8 +1,10 @@
 import React from "react";
+import {IsExact, assert} from "conditional-type-checks";
 import {
     MappedState,
     MappedActions,
     makeConnector,
+    MappedStateAndActions,
 } from "../src/redux-render-prop";
 
 // for asserting types
@@ -43,6 +45,12 @@ declare const mappedActions: MappedActions<typeof FooConnect>;
 const mappedActionsAssign: {hello(): "hello"} = mappedActions;
 // $ExpectError
 num = mappedActions;
+
+declare const mappedStateAndActions: MappedStateAndActions<typeof FooConnect>;
+
+assert<IsExact<typeof mappedStateAndActions.bar, string>>(true);
+
+assert<IsExact<typeof mappedStateAndActions.hello, () => "hello">>(true);
 
 const TestBasic = () => (
     <div>

@@ -19,6 +19,10 @@ export type MappedActions<T extends {__actions: any}> = T extends {
     ? V
     : never;
 
+export type MappedStateAndActions<
+    T extends {__actions: any; __data: any}
+> = MappedState<T> & MappedActions<T>;
+
 /**
  * Throw in mapState to force null rendering.
  *
