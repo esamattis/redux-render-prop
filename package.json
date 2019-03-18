@@ -1,43 +1,43 @@
 {
-  "name": "redux-render-prop",
-  "version": "0.8.0",
-  "description": "Redux with render props. Typescript friendly.",
-  "main": "lib/redux-render-prop.js",
-  "types": "lib/redux-render-prop.d.ts",
-  "repository": {
-    "url": "https://github.com/epeli/redux-render-prop"
-  },
-  "scripts": {
-    "test": "tsc && npm run dtslint && jest",
-    "build": "npm run test && tsc --project tsconfig.build.json && rm -rf lib && mv build/src lib && rm -rf build",
-    "dtslint": "tslint --project tsconfig.dtslint.json",
-    "clean": "rm -rf lib build",
-    "prepublishOnly": "npm run build"
-  },
-  "author": "",
-  "license": "ISC",
-  "files": [
-    "lib"
-  ],
-  "devDependencies": {
-    "@types/jest": "^23.3.12",
-    "@types/react": "~16.7.18",
-    "@types/react-dom": "^16.0.11",
-    "@types/react-redux": "^6.0.12",
-    "jest": "^23.6.0",
-    "prettier": "^1.15.3",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-testing-library": "^5.4.4",
-    "redux": "^4.0.1",
-    "ts-jest": "^23.10.5",
-    "reselect": "^4.0.0",
-    "typescript": "^3.2.2",
-    "react-redux": "^6.0.0",
-    "dtslint": "^0.4.2",
-    "tslint": "^5.12.0"
-  },
-  "peerDependencies": {
-    "react-redux": "^6.0.0"
-  }
+    "name": "redux-render-prop",
+    "version": "0.8.0",
+    "description": "Redux with render props. Typescript friendly.",
+    "main": "lib/redux-render-prop.js",
+    "types": "lib/redux-render-prop.d.ts",
+    "repository": {
+        "url": "https://github.com/epeli/redux-render-prop"
+    },
+    "scripts": {
+        "test": "tsc && npm run dtslint && jest",
+        "build": "npm run test && tsc --project tsconfig.build.json && rm -rf lib && mv build/src lib && rm -rf build",
+        "dtslint": "tslint --project tsconfig.dtslint.json",
+        "clean": "rm -rf lib build",
+        "prepublishOnly": "npm run build"
+    },
+    "author": "",
+    "license": "ISC",
+    "files": [
+        "lib"
+    ],
+    "devDependencies": {
+        "@types/jest": "^24.0.11",
+        "@types/react": "~16.8.8",
+        "@types/react-dom": "^16.8.2",
+        "@types/react-redux": "^7.0.3",
+        "jest": "^24.5.0",
+        "prettier": "^1.16.4",
+        "react": "^16.8.4",
+        "react-dom": "^16.8.4",
+        "react-testing-library": "^6.0.0",
+        "redux": "^4.0.1",
+        "ts-jest": "^24.0.0",
+        "reselect": "^4.0.0",
+        "typescript": "^3.3.3333",
+        "react-redux": "^6.0.1",
+        "dtslint": "^0.5.5",
+        "tslint": "^5.14.0"
+    },
+    "peerDependencies": {
+        "react-redux": "^6.0.0"
+    }
 }
