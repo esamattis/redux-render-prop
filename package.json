@@ -24,18 +24,19 @@
         "@types/react": "~16.8.8",
         "@types/react-dom": "^16.8.2",
         "@types/react-redux": "^7.0.3",
+        "conditional-type-checks": "^1.0.0",
+        "dtslint": "^0.5.5",
         "jest": "^24.5.0",
         "prettier": "^1.16.4",
         "react": "^16.8.4",
         "react-dom": "^16.8.4",
+        "react-redux": "^6.0.1",
         "react-testing-library": "^6.0.0",
         "redux": "^4.0.1",
-        "ts-jest": "^24.0.0",
         "reselect": "^4.0.0",
-        "typescript": "^3.3.3333",
-        "react-redux": "^6.0.1",
-        "dtslint": "^0.5.5",
-        "tslint": "^5.14.0"
+        "ts-jest": "^24.0.0",
+        "tslint": "^5.14.0",
+        "typescript": "^3.3.3333"
     },
     "peerDependencies": {
         "react-redux": "^6.0.0"
