@@ -31,7 +31,7 @@
         "react": "^16.8.4",
         "react-dom": "^16.8.4",
         "react-redux": "^6.0.1",
-        "react-testing-library": "^6.0.0",
+        "react-testing-library": "^8.0.1",
         "redux": "^4.0.1",
         "reselect": "^4.0.0",
         "ts-jest": "^24.0.0",
