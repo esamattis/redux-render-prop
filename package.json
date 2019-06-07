@@ -27,7 +27,7 @@
         "conditional-type-checks": "^1.0.0",
         "dtslint": "^0.5.5",
         "jest": "^24.5.0",
-        "prettier": "^1.16.4",
+        "prettier": "^1.18.2",
         "react": "^16.8.4",
         "react-dom": "^16.8.4",
         "react-redux": "^6.0.1",
