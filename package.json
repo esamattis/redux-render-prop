@@ -25,7 +25,7 @@
         "@types/react-dom": "^16.8.2",
         "@types/react-redux": "^7.0.3",
         "conditional-type-checks": "^1.0.0",
-        "dtslint": "^0.5.5",
+        "dtslint": "^0.9.6",
         "jest": "^24.5.0",
         "prettier": "^1.16.4",
         "react": "^16.8.4",
